@@ -1,0 +1,90 @@
+<%
+  active_classes = "active-state active"
+  inactive_classes = "inactive-state"
+%>
+<div data-controller="tab-component"
+     <%= helpers.ta config.debug, data_tab_component_debug: !!config.debug %>
+     data-tab-component-active-classes-value='<%= active_classes %>'
+     data-tab-component-inactive-classes-value='<%= inactive_classes %>'
+     class="w-full">
+  <% if config.style == :segmented %>
+    <div class="w-full">
+      <ul id="<%= config.id %>" data-tabs-toggle-disable="#<%= config.id %>Content" role="tablist"
+          data-tab-component-target="tablist"
+          class=" flex text-sm text-center text-gray-500 tab-bg p-0.5 rounded-lg shadow w-full">
+        <% for tab in tabs %>
+          <% if tab.selected %>
+            <li class="w-full">
+              <a href="#" class="inline-block w-full h-full p-1 rounded-lg items-center <%= active_classes %>"
+                 id="<%= tab.id %>-segmented-tab"
+                 type="button" role="tab"
+                 data-tab-component-target="tab"
+                 data-tab-component-value="<%= tab.value || tab.id %>"
+                 data-tabs-target="#<%= tab.id %>"
+                 aria-current="page"
+                 aria-controls="<%= tab.id %>"
+                 aria-selected="<%= !!tab.selected %>"><%= tab.title %></a>
+            </li>
+          <% else %>
+            <li class="w-full">
+              <a href="#" class="inline-block w-full h-full p-1 rounded-lg items-center <%= inactive_classes %>"
+                 id="<%= tab.id %>-segmented-tab"
+                 type="button" role="tab"
+                 data-tab-component-target="tab"
+                 data-tab-component-value="<%= tab.value || tab.id %>"
+                 data-tabs-target="#<%= tab.id %>"
+                 aria-controls="<%= tab.id %>"
+                 aria-selected="<%= !!tab.selected %>">
+                <%= tab.title %>
+              </a>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  <% else %>
+    <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+      <ul class="flex text-sm font-medium text-center"
+          id="<%= config.id %>" data-tabs-toggle-disabled="#<%= config.id %>Content" role="tablist"
+          data-tab-component-target="tablist">
+        <% for tab in tabs %>
+          <% if tab.selected %>
+            <li class="mr-2" role="presentation">
+              <button class="inline-block p-4 border-b-2 rounded-t-lg <%= active_classes %>" id="<%= tab.id %>-tab"
+                      type="button" role="tab"
+                      data-tab-component-target="tab"
+                      data-tabs-target="#<%= tab.id %>"
+                      aria-controls="<%= tab.id %>"
+                      aria-selected="<%= !!tab.selected %>">
+                <%= tab.title %>
+              </button>
+            </li>
+          <% else %>
+            <li class="mr-2" role="presentation">
+              <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg  <%= inactive_classes %>"
+                      type="button" role="tab"
+                      id="<%= tab.id %>-tab"
+                      data-tab-component-target="tab"
+                      data-tabs-target="#<%= tab.id %>"
+                      aria-controls="<%= tab.id %>"
+                      aria-selected="<%= !!tab.selected %>">
+                <%= tab.title %>
+              </button>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= config.header %>
+  <div id="<%= config.id %>Content" class="w-full">
+    <% for tab in tabs %>
+      <div class="<%= tab.selected ? '' : 'hidden' %> <%= tab.class %>"
+           id="<%= tab.id %>" role="tabpanel" aria-labelledby="<%= tab.id %>-tab">
+          <%= tab.content %>
+      </div>
+    <% end %>
+  </div>
+  <%= config.footer %>
+</div>
